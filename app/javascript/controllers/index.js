@@ -6,3 +6,9 @@ import { application } from "./application"
 
 import HelloController from "./hello_controller"
 application.register("hello", HelloController)
+
+document.addEventListener("turbo:submit-end", function(event) {
+  if (event.target.id === "date-parse-form") {
+    event.target.reset();
+  }
+});

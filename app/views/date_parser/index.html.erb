@@ -12,11 +12,3 @@
     </div>
   </div>
 <% end %>
-
-<script>
-  document.addEventListener("turbo:submit-end", function(event) {
-    if (event.target.id === "date-parse-form") {
-      event.target.reset();
-    }
-  });
-</script>
