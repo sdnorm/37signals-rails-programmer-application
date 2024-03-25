@@ -3,7 +3,7 @@
     <div style="width: 50%;">
       <%= form_with(url: date_parse_path, method: :post, data: { turbo_frame: "result" }, id: "date-parse-form") do |form| %>
         <label for="nlp-date" class="block text-sm font-medium leading-6 text-gray-900">Type in a natural language date to parse</label>
-        <div class="mt-2">
+        <div class="mt-2 mb-7">
           <%= form.text_field :nlp_date, id: "nlp-date", class: "block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300", placeholder: "ex. 'tomorrow at noon'" %>
           <%= form.submit "Parse Date", class: "mt-2 rounded-md border-0 bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
         </div>

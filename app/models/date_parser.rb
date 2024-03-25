@@ -4,6 +4,7 @@ class DateParser < ApplicationRecord
 
   def self.parse(expression, reference_time = DateTime.now)
     if expression.match?(/\b(minutes|hours|days|weeks) from now/)
+      # need to account for something like this "3 days from now at noon"
       date_time = time_from_now(expression, reference_time)
       DateTime.new(
         date_time.year,
@@ -93,6 +94,7 @@ class DateParser < ApplicationRecord
 
   # could have these be settings set by the user and retrieved from the database
   def self.parse_time(time_expression, reference_time)
+    # need to catch things like "Friday at 1" and make an assumption that the time is PM, etc. 
     case time_expression.downcase
     when 'now'
       reference_time
