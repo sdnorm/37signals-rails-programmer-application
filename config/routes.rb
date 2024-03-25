@@ -5,8 +5,8 @@ Rails.application.routes.draw do
   resource :registration
   resource :session
   resource :qr_session
-  get 'qr_sessions/:token', to: 'qr_sessions#qr_sign_in', as: :qr_sign_in
-  
+  get 'qr_sessions', to: 'qr_sessions#qr_sign_in', as: :qr_sign_in
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
