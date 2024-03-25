@@ -1,6 +1,9 @@
 Rails.application.routes.draw do
   get 'date_parser/index'
   post 'date_parse' => 'date_parser#parse', as: :date_parse
+
+  resource :registration
+  resource :session
   
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
