@@ -1,6 +1,6 @@
 <%= turbo_frame_tag "date_parser" do %>
   <div class="flex justify-center items-center mt-11">
-    <div class="w-1/2">
+    <div class="w-3/4 md:w-1/2">
       <%= form_with(url: date_parse_path, method: :post, data: { turbo_frame: "result" }, id: "date-parse-form") do |form| %>
         <label for="nlp-date" class="block text-sm font-medium leading-6 text-gray-900">Type in a natural language date to parse</label>
         <div class="mt-2 mb-7">
