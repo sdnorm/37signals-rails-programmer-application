@@ -1,0 +1,7 @@
+<%= turbo_stream.update "result" do %>
+  <div>
+    <p>Phrase Passed: <strong><%= @phrase %></strong></p>
+    <p>Parsed Date: <strong><%= @parsed_date.strftime('%m/%d/%Y %I:%M %p') %></strong></p>
+  </div>
+<% end %>
+
