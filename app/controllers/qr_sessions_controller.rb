@@ -9,7 +9,7 @@ class QrSessionsController < ApplicationController
     @svg = qr_code.as_svg(
       color: "000",
       shape_rendering: "crispEdges",
-      module_size: 11,
+      module_size: 6,
       standalone: true,
       use_path: true
     )

@@ -1,8 +1,12 @@
-<div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-  <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-    <h2 class="mt-10 mb-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Scan this QR code to switch your session to a mobile device.</h2>
-    <%= raw @svg %>
+<div class="flex mt-6 items-center justify-center bg-white px-4 sm:px-6 lg:px-8">
+  <div class="w-full max-w-xs mx-auto">
+    <!-- Reduce the bottom margin of the header -->
+    <h2 class="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900 mb-2">Scan this QR code to switch your session to a mobile device.</h2>
+    <div class="flex justify-center">
+      <!-- Reduce the top margin of the QR code container -->
+      <div class="mt-2 p-4 border rounded-lg">
+        <%= raw @svg %>
+      </div>
+    </div>
   </div>
 </div>
-
-
