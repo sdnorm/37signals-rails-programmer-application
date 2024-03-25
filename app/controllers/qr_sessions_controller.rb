@@ -2,7 +2,14 @@ class QrSessionsController < ApplicationController
   before_action :authenticate_user!, only: :new
 
   def new
-    simple_qrcode = RQRCodeCore::QRCode.new("https://104jq.hatchboxapp.com/", size: 2, level: :m, mode: :byte_8bit)
+    qr_code = RQRCode::QRCode.new("https://104jq.hatchboxapp.com/")
+    @svg = qr_code.as_svg(
+      color: "000",
+      shape_rendering: "crispEdges",
+      module_size: 11,
+      standalone: true,
+      use_path: true
+    )
   end
 
   def create
