@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'general/index'
   get 'date_parser/index'
   post 'date_parse' => 'date_parser#parse', as: :date_parse
 
@@ -14,5 +15,5 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
   # Defines the root path route ("/")
-  root "date_parser#index"
+  root "general#index"
 end
