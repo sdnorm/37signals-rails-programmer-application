@@ -54,14 +54,14 @@ class DateParser < ApplicationRecord
       reference_date + 1
     when 'today'
       reference_date
-    when /^next (\w+)$/i # Match "next [weekday]" pattern
+    when /^next (\w+)$/i
       weekday = $1.capitalize
       if WEEKDAYS.include?(weekday)
         days_until_next = (WEEKDAYS.index(weekday) - reference_date.wday) % 7
         days_until_next = 7 if days_until_next.zero?
         reference_date + days_until_next.days
       else
-        reference_date # Return reference_date if it's not a valid weekday
+        reference_date
       end
     else
       weekday_to_date(from_day_expression.capitalize, reference_date, 0)
@@ -71,7 +71,7 @@ class DateParser < ApplicationRecord
   def self.weekday_to_date(weekday, reference_date, direction)
     weekday = weekday.capitalize
     day_index = WEEKDAYS.index(weekday)
-    return reference_date if day_index.nil? # Return reference_date if weekday is not found
+    return reference_date if day_index.nil?
   
     days_until = (day_index - reference_date.wday) % 7
     days_until += 7 if direction.positive? && days_until.zero?
@@ -79,6 +79,7 @@ class DateParser < ApplicationRecord
     reference_date + days_until.days
   end
 
+  # could have these be settings set by the user and retrieved from the database
   def self.parse_time(time_expression, reference_time)
     case time_expression.downcase
     when 'now'
