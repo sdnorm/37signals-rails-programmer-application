@@ -27,5 +27,32 @@ class DateParserTest < ActiveSupport::TestCase
     assert_equal expected, DateParser.parse('next Friday at late evening', reference_time)
   end
 
+  test "parse '2 weeks from tomorrow'" do
+    reference_time = DateTime.new(2024, 4, 15) # Example reference time
+    expected = reference_time + 1.day + 2.weeks
+    assert_equal expected, DateParser.parse('2 weeks from tomorrow', reference_time)
+  end
+
+  test "parse '3 weeks from Tuesday'" do
+    reference_time = DateTime.new(2024, 4, 15) # Assuming this date is not a Tuesday
+    # Find the next Tuesday from the reference_time
+    next_tuesday = reference_time + ((2 - reference_time.wday) % 7).days
+    expected = next_tuesday + 3.weeks
+    assert_equal expected, DateParser.parse('3 weeks from Tuesday', reference_time)
+  end
+
+  test "parse '1 month from today'" do
+    reference_time = DateTime.new(2024, 4, 15)
+    expected = reference_time + 1.month
+    assert_equal expected, DateParser.parse('1 month from today', reference_time)
+  end
+
+  test "parse '2 months from next Monday'" do
+    reference_time = DateTime.new(2024, 4, 14)
+
+    expected = Date.new(2024, 6, 15).beginning_of_day
+    assert_equal expected, DateParser.parse('2 months from next Monday', reference_time)
+  end
+
   # Add more tests for edge cases and other expressions as needed
 end

@@ -1,8 +1,9 @@
 class DateParser < ApplicationRecord
-  WEEKDAYS = %w[Sunday Monday Tuesday Wednesday Thursday Friday Saturday].freeze
+  WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+  # WEEKDAYS = %w[Sunday Monday Tuesday Wednesday Thursday Friday Saturday].freeze
 
   def self.parse(expression, reference_time = DateTime.now)
-    date_part, time_part = expression.split(' at ')
+    date_part, time_part = expression.split(/ at | @ /)
     date = parse_date(date_part.strip, reference_time.to_date)
     time = parse_time(time_part ? time_part.strip : 'now', reference_time)
 
@@ -15,24 +16,67 @@ class DateParser < ApplicationRecord
     case date_expression.downcase
     when 'tomorrow'
       reference_date + 1
+    when 'end of the month'
+      Date.new(reference_date.year, reference_date.month, -1)
+    when /(\d+) weeks? from (\w+)(?:\s+(\w+))?/
+      weeks = $1.to_i
+      day_expression_parts = [$2, $3].compact
+      from_day_expression = day_expression_parts.join(' ')
+      weeks_from_date(weeks, from_day_expression, reference_date)
+    when /(\d+) months? from (\w+)(?:\s+(\w+))?/
+      months = $1.to_i
+      day_expression_parts = [$2, $3].compact
+      from_day_expression = day_expression_parts.join(' ')
+      months_from_date(months, from_day_expression, reference_date)
     when /next (\w+)/
       weekday_to_date($1, reference_date, 1)
     when /last (\w+)/
       weekday_to_date($1, reference_date, -1)
-    when 'end of the month'
-      Date.new(reference_date.year, reference_date.month, -1)
     # Add other specific and relative date cases here
     else
       Date.parse(date_expression) rescue reference_date
     end
   end
 
+  def self.weeks_from_date(weeks, from_day_expression, reference_date)
+    from_date = calculate_from_date(from_day_expression, reference_date)
+    from_date + weeks.weeks
+  end
+  
+  def self.months_from_date(months, from_day_expression, reference_date)
+    from_date = calculate_from_date(from_day_expression, reference_date)
+    from_date + months.months
+  end
+  
+  def self.calculate_from_date(from_day_expression, reference_date)
+    case from_day_expression
+    when 'tomorrow'
+      reference_date + 1
+    when 'today'
+      reference_date
+    when /^next (\w+)$/i # Match "next [weekday]" pattern
+      weekday = $1.capitalize
+      if WEEKDAYS.include?(weekday)
+        days_until_next = (WEEKDAYS.index(weekday) - reference_date.wday) % 7
+        days_until_next = 7 if days_until_next.zero?
+        reference_date + days_until_next.days
+      else
+        reference_date # Return reference_date if it's not a valid weekday
+      end
+    else
+      weekday_to_date(from_day_expression.capitalize, reference_date, 0)
+    end
+  end
+  
   def self.weekday_to_date(weekday, reference_date, direction)
-    day_index = WEEKDAYS.index(weekday.capitalize)
+    weekday = weekday.capitalize
+    day_index = WEEKDAYS.index(weekday)
+    return reference_date if day_index.nil? # Return reference_date if weekday is not found
+  
     days_until = (day_index - reference_date.wday) % 7
     days_until += 7 if direction.positive? && days_until.zero?
     days_until -= 7 if direction.negative? && days_until.zero?
-    reference_date + direction * days_until
+    reference_date + days_until.days
   end
 
   def self.parse_time(time_expression, reference_time)
