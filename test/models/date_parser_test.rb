@@ -54,5 +54,29 @@ class DateParserTest < ActiveSupport::TestCase
     assert_equal expected, DateParser.parse('2 months from next Monday', reference_time)
   end
 
+  test "parse '3 minutes from now'" do
+    reference_time = DateTime.new(2024, 4, 15, 10, 0, 0) # Example reference time
+    expected = reference_time + 3.minutes
+    assert_equal expected, DateParser.parse('3 minutes from now', reference_time)
+  end
+
+  test "parse '3 hours from now'" do
+    reference_time = DateTime.new(2024, 4, 15, 10, 0, 0) # Example reference time
+    expected = reference_time + 3.hours
+    assert_equal expected, DateParser.parse('3 hours from now', reference_time)
+  end
+
+  test "parse '3 days from now'" do
+    reference_time = DateTime.new(2024, 4, 15, 10, 0, 0) # Example reference time
+    expected = reference_time + 3.days
+    assert_equal expected, DateParser.parse('3 days from now', reference_time)
+  end
+
+  test "parse '3 weeks from now'" do
+    reference_time = DateTime.new(2024, 4, 15, 10, 0, 0) # Example reference time
+    expected = reference_time + 3.weeks
+    assert_equal expected, DateParser.parse('3 weeks from now', reference_time)
+  end
+
   # Add more tests for edge cases and other expressions as needed
 end

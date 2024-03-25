@@ -3,11 +3,23 @@ class DateParser < ApplicationRecord
   # WEEKDAYS = %w[Sunday Monday Tuesday Wednesday Thursday Friday Saturday].freeze
 
   def self.parse(expression, reference_time = DateTime.now)
-    date_part, time_part = expression.split(/ at | @ /)
-    date = parse_date(date_part.strip, reference_time.to_date)
-    time = parse_time(time_part ? time_part.strip : 'now', reference_time)
-
-    DateTime.new(date.year, date.month, date.day, time.hour, time.min, time.sec, time.zone)
+    if expression.match?(/\b(minutes|hours|days|weeks) from now/)
+      date_time = time_from_now(expression, reference_time)
+      DateTime.new(
+        date_time.year,
+        date_time.month,
+        date_time.day,
+        date_time.hour,
+        date_time.min,
+        date_time.sec,
+        date_time.zone
+      )
+    else
+      date_part, time_part = expression.split(/ at | @ /)
+      date = parse_date(date_part.strip, reference_time.to_date)
+      time = parse_time(time_part ? time_part.strip : 'now', reference_time)
+      DateTime.new(date.year, date.month, date.day, time.hour, time.min, time.sec, time.zone)
+    end
   end
 
   private
@@ -92,13 +104,22 @@ class DateParser < ApplicationRecord
       reference_time.change(hour: 6, min: 0)
     when /late evening/
       reference_time.change(hour: 21, min: 0)
-    when /(\d+) minutes from now/
-      reference_time + ($1.to_i * 60)
-    when /(\d+) hours before now/
-      reference_time - ($1.to_i * 60 * 60)
     # Add other specific time expressions and relative times as needed
     else
       parse_explicit_time(time_expression, reference_time)
+    end
+  end
+
+  def self.time_from_now(time_expression, reference_time)
+    case time_expression.downcase
+    when /(\d+) minutes from now/
+      reference_time + $1.to_i.minutes
+    when /(\d+) hours from now/
+      reference_time + $1.to_i.hours
+    when /(\d+) days from now/
+      reference_time + $1.to_i.days
+    when /(\d+) weeks from now/
+      reference_time + $1.to_i.weeks
     end
   end
   
